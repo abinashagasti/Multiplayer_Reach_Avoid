@@ -6,21 +6,29 @@ clear
 clc
 close all
 
-%% Initiate player positions
+% Initiate player positions
 
-N=11;
-M=6;
+N=3;
+M=2;
 
-xp=-10+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
-xe=-10+20*rand(3,M);xe=xe'; % are in rows
-vp=1.5+rand(N,1);
-ve=1+rand(M,1);
+% xp=-10+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
+% xe=-10+20*rand(3,M);xe=xe'; % are in rows
+% vp=1.5+rand(N,1);
+% ve=1+rand(M,1);
 
-% xp=[1 0 0;1 0 0.5;1 0 -NiNN0.5];
-% xe=[0.75 1 0;0.75 -1 0];
-% vp=ones(3);ve=0.5*ones(2);
+% For numerical illustration
+% xp=[-8.0258,-4.7626,-3.2929;3.5946,-7.2689,4.4245;-7.8648,3.0751,-0.1165];
+% xe=[5.5810,4.3007,8.0744;7.8185,-3.3167,3.9749;-6.0438,-9.3892,4.8815];
+% vp=[2;1.9799;2.4047];
+% ve=[1.6099;1.6177;1.8594];
 
-%% Compute static information
+
+% For dispersal surface
+xp=[1 0 0;1 0 0.5;1 0 -0.5];
+xe=[0.75 1 0;0.75 -1 0];
+vp=ones(3);ve=0.5*ones(2);
+
+% Compute static information
 
 % Find alpha and mu matrix that denotes if evader i can be 
 % captured by pursuer j?
@@ -52,7 +60,7 @@ ve=1+rand(M,1);
 % also be positive, but that does not imply that the game shall be won by
 % the pursuers, as clearly at least M-N evaders cannot be captured.
 
-%% Alternate for previous section
+% Alternate for previous section
 
 B=zeros(M,N);alpha=zeros(M,N);
 a=zeros(M,N);
@@ -68,7 +76,7 @@ for i=1:M
     end
 end
 
-%% Optimal Assignment
+% Optimal Assignment
 
 % First, we shall find the optimal assignment, because if in the optimal
 % assignment the pursuing team wins, then clearly evaders cannot win under
@@ -128,12 +136,15 @@ hold on
 plot3(xp(:,1),xp(:,2),xp(:,3), 'ro',LineWidth=3,MarkerSize=8)
 plot3(xe(:,1),xe(:,2),xe(:,3), 'bo',LineWidth=3,MarkerSize=8)
 grid on
+xlabel('x');ylabel('y');zlabel('z');
 
 if win==0
     disp("The pursuing team wins!")
     z=zeros(1501,8,M);
+    V=zeros(M,1);
     for i=1:M
         j=find(x(i,:)==1);
+        V(i)=Value(xp(j,:),xe(i,:),alpha(i,j));
         [t,y]=ode45(@agent_dynamics,[0:0.01:15],[xe(i,:)';xp(j,:)';alpha(i,j);B(i,j)]);
         z(:,:,i)=y;
         plot3(z(:,1,i),z(:,2,i),z(:,3,i),'b',LineWidth=2)
@@ -143,11 +154,13 @@ else
     disp("The evading team wins.")
 end
 
+netValue=sum(V)
+
 %% Writing data
 
-writematrix(z(:,1:3,1),'xe1.csv','Delimiter','tab')
-writematrix(z(:,1:3,2),'xe2.csv','Delimiter','tab')
-writematrix(z(:,1:3,3),'xe3.csv','Delimiter','tab')
-writematrix(z(:,4:6,1),'xp1.csv','Delimiter','tab')
-writematrix(z(:,4:6,2),'xp2.csv','Delimiter','tab')
-writematrix(z(:,4:6,3),'xp3.csv','Delimiter','tab')
+% writematrix(z(:,1:3,1),'xe1.csv','Delimiter','tab')
+% writematrix(z(:,1:3,2),'xe2.csv','Delimiter','tab')
+% writematrix(z(:,1:3,3),'xe3.csv','Delimiter','tab')
+% writematrix(z(:,4:6,1),'xp1.csv','Delimiter','tab')
+% writematrix(z(:,4:6,2),'xp2.csv','Delimiter','tab')
+% writematrix(z(:,4:6,3),'xp3.csv','Delimiter','tab')
