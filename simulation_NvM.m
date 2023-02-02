@@ -8,13 +8,13 @@ close all
 
 % Initiate player positions
 
-N=3;
-M=2;
+N=11;
+M=10;
 
-% xp=-10+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
-% xe=-10+20*rand(3,M);xe=xe'; % are in rows
-% vp=1.5+rand(N,1);
-% ve=1+rand(M,1);
+xp=-10+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
+xe=-10+20*rand(3,M);xe=xe'; % are in rows
+vp=2+rand(N,1);
+ve=1+rand(M,1);
 
 % For numerical illustration
 % xp=[-8.0258,-4.7626,-3.2929;3.5946,-7.2689,4.4245;-7.8648,3.0751,-0.1165];
@@ -24,9 +24,9 @@ M=2;
 
 
 % For dispersal surface
-xp=[1 0 0;1 0 0.5;1 0 -0.5];
-xe=[0.75 1 0;0.75 -1 0];
-vp=ones(3);ve=0.5*ones(2);
+% xp=[1 0 0;1 0 0.5;1 0 -0.5];
+% xe=[0.75 1 0;0.75 -1 0];
+% vp=ones(3);ve=0.5*ones(2);
 
 % Compute static information
 
