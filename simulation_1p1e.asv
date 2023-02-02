@@ -1,0 +1,65 @@
+%% 1P1E Reach-Avoid Game in 3D Space
+% This code shall simulate the 1 pursuer 1 evader version of the 
+% reach-avoid game by using the Value function to synthesize optimal
+% controls. 
+
+clear
+close all
+clc
+
+%% Initialize starting positions
+
+% Toy case where pursuer wins
+xp=[1;0;2];
+xe=[2;3;1];
+alpha=0.4;
+
+% Toy case where evader wins
+% xp=[3;3;2];
+% xe=[1;0;0];
+% alpha=0.4;
+
+% alpha=0.8;
+% xe=rand(3,1);xe=alpha*xe/norm(xe);
+% xp=rand(3,1);xp=xp/norm(xp);
+
+% Anomalous case
+% xp=[1.5;1.5;1.5];
+% xe=[2;2;2];
+% alpha=1.2;
+
+% Test cases from the multiplayer scenario
+xp=[]
+%% Game of Kind Solution
+
+[xc,rc]=apollonius_parameters(xp,xe,alpha,1); % find the apollonius circle 
+% center and radius
+
+B = xe'*xe-alpha^2*(xp'*xp);
+hold on
+plot3(xp(1),xp(2),xp(3),'ro',LineWidth=3,MarkerSize=8)
+plot3(xe(1),xe(2),xe(3),'bo',LineWidth=3,MarkerSize=8)
+plot3(0,0,0,'go',LineWidth=3,MarkerSize=8)
+
+%% Game of Degree Solution
+
+[t,y]=ode45(@agent_dynamics,[0,10],[xe;xp;alpha;B]);
+
+hold on
+plot3(y(:,1),y(:,2),y(:,3),'b',LineWidth=2)
+plot3(y(:,4),y(:,5),y(:,6),'r',LineWidth=2)
+axis equal
+
+%% Checking for C1 property of combined Value function
+% close
+
+% Rc=norm(xc);
+% Rp=norm(xp);
+% Re=norm(xe);
+% 
+% gradVP=(1/(1-alpha^2))*[xc/Rc-(alpha^2/(1-alpha^2))*((xe-xp)/rc);
+%         alpha^2*(-xc/Rc+(1/(1-alpha^2))*((xe-xp)/rc))];
+% 
+% gradVE=[-(1/alpha)*(xe/Re);xp/Rp];
+% 
+% scale=gradVP./gradVE
