@@ -2,6 +2,10 @@
 % This piece of code helps in measuring the time taken to compute 
 % assignment related calculations using brute force method.
 
+sum_time=0;
+
+for avg_timer=1:1
+
 tic;
 tstart=tic;
 assign_mat=perms(1:N);
@@ -27,4 +31,10 @@ for i=1:M
         x(i,j,k)=1;
     end
 end
-time_taken=toc(tstart)
+
+time_taken=toc(tstart);
+sum_time=sum_time+time_taken;
+
+end
+
+avg_time_taken_brute=sum_time/1

@@ -8,8 +8,8 @@ close all
 
 % Initiate player positions
 
-N=11;
-M=11;
+N=100;
+M=100;
 
 xp=-10+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
 xe=-10+20*rand(3,M);xe=xe'; % are in rows
@@ -150,11 +150,10 @@ if win==0
         plot3(z(:,1,i),z(:,2,i),z(:,3,i),'b',LineWidth=2)
         plot3(z(:,4,i),z(:,5,i),z(:,6,i),'r',LineWidth=2)
     end
+    netValue=sum(V)
 else
     disp("The evading team wins.")
 end
-
-netValue=sum(V)
 
 %% Writing data
 
