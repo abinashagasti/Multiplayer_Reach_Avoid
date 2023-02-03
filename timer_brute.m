@@ -8,15 +8,15 @@ assign_mat=perms(1:N);
 assign_mat=assign_mat(:,1:M);
 Nfac=factorial(N);
 
-% for i=1:Nfac
-%     for j=1:M
-%         assign_val(i,j)=a(j,assign_mat(i,j));
-%     end
-% end
-
-for j=1:M
-    assign_val(:,j)=a(j,assign_mat(:,j));
+parfor i=1:Nfac
+    for j=1:M
+        assign_val(i,j)=a(j,assign_mat(i,j));
+    end
 end
+
+% for j=1:M
+%     assign_val(:,j)=a(j,assign_mat(:,j));
+% end
 
 sumarr=sum(assign_val,2);
 imax=find(sumarr==max(sumarr));

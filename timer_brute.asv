@@ -13,14 +13,18 @@ for i=1:Nfac
         assign_val(i,j)=a(j,assign_mat(i,j));
     end
 end
+
+% for j=1:M
+%     assign_val(:,j)=a(j,assign_mat(:,j));
+% end
+
 sumarr=sum(assign_val,2);
 imax=find(sumarr==max(sumarr));
-if length(imax)>1
-    imax=imax(1);
-end
 x=zeros(M,N,length(imax));
 for i=1:M
-    j=assign_mat(imax,i);
-    x(i,j)=1;
+    for k=1:length(imax)
+        j=assign_mat(imax(k),i);
+        x(i,j,k)=1;
+    end
 end
 time_taken=toc(tstart)

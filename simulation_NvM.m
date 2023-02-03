@@ -9,7 +9,7 @@ close all
 % Initiate player positions
 
 N=11;
-M=10;
+M=11;
 
 xp=-10+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
 xe=-10+20*rand(3,M);xe=xe'; % are in rows
