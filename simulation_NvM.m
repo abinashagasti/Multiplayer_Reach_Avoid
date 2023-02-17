@@ -8,8 +8,8 @@ close all
 
 % Initiate player positions
 
-N=100;
-M=100;
+N=7;
+M=5;
 
 xp=-10+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
 xe=-10+20*rand(3,M);xe=xe'; % are in rows
@@ -88,14 +88,14 @@ end
 f=a';f=f(:);
 b=ones(M+N,1);
 A=zeros(M+N,M*N);
-for i=1:M+N
-    if i>N
-        A(i,(i-N-1)*N+1:(i-N)*N)=1;
-    end
+for i=N+1:M+N
+    A(i,(i-N-1)*N+1:(i-N)*N)=1;
 end
 for j=1:N:M*N
     A(1:N,j:j+N-1)=eye(N);
 end
+
+% Optimal assignment
 
 if N>=M
     x=linprog(-f,A(1:N,:),b(1:N),A(N+1:N+M,:),b(N+1:N+M),zeros(M*N,1));
@@ -112,8 +112,10 @@ end
 % would be zero else the solution is not optimal. So nonassignment means
 % capture is not possible. 
 
-% x=linprog(-f,A,b,[],[],zeros(M*N,1));
-% x=reshape(x,[N,M])';
+x_relax=linprog(-f,A,b,[],[],zeros(M*N,1));
+x_relax=reshape(x_relax,[N,M])';
+
+sum(sum(x-x_relax))
 
 %% Game of Kind
 % Using the optimal assignment we can determine the winning team. If for
@@ -157,9 +159,9 @@ end
 
 %% Writing data
 
-% writematrix(z(:,1:3,1),'xe1.csv','Delimiter','tab')
-% writematrix(z(:,1:3,2),'xe2.csv','Delimiter','tab')
-% writematrix(z(:,1:3,3),'xe3.csv','Delimiter','tab')
-% writematrix(z(:,4:6,1),'xp1.csv','Delimiter','tab')
-% writematrix(z(:,4:6,2),'xp2.csv','Delimiter','tab')
-% writematrix(z(:,4:6,3),'xp3.csv','Delimiter','tab')
+% writematrix(z(:,1:3,1),'xe1_d4.csv','Delimiter','tab')
+% writematrix(z(:,1:3,2),'xe2_d4.csv','Delimiter','tab')
+% % writematrix(z(:,1:3,3),'xe3.csv','Delimiter','tab')
+% writematrix(z(:,4:6,1),'xp1_d4.csv','Delimiter','tab')
+% writematrix(z(:,4:6,2),'xp2_d4.csv','Delimiter','tab')
+% % writematrix(z(:,4:6,3),'xp3.csv','Delimiter','tab')

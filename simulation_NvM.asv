@@ -8,21 +8,25 @@ close all
 
 % Initiate player positions
 
-N=3;
-M=2;
+N=7;
+M=5;
 
-% xp=-10+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
-% xe=-10+20*rand(3,M);xe=xe'; % are in rows
-% vp=1.5+rand(N,1);
-% ve=1+rand(M,1);
+xp=-10+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
+xe=-10+20*rand(3,M);xe=xe'; % are in rows
+vp=2+rand(N,1);
+ve=1+rand(M,1);
 
 % For numerical illustration
-x
+% xp=[-8.0258,-4.7626,-3.2929;3.5946,-7.2689,4.4245;-7.8648,3.0751,-0.1165];
+% xe=[5.5810,4.3007,8.0744;7.8185,-3.3167,3.9749;-6.0438,-9.3892,4.8815];
+% vp=[2;1.9799;2.4047];
+% ve=[1.6099;1.6177;1.8594];
+
 
 % For dispersal surface
-xp=[1 0 0;1 0 0.5;1 0 -0.5];
-xe=[0.75 1 0;0.75 -1 0];
-vp=ones(3);ve=0.5*ones(2);
+% xp=[1 0 0;1 0 0.5;1 0 -0.5];
+% xe=[0.75 1 0;0.75 -1 0];
+% vp=ones(3);ve=0.5*ones(2);
 
 % Compute static information
 
@@ -67,7 +71,7 @@ for i=1:M
         if B(i,j)>=0 && alpha(i,j)<=1
             a(i,j)=Value(xp(j,:),xe(i,:),alpha(i,j));
         else
-            a(i,j)=-100;
+            a(i,j)=0;
         end
     end
 end
@@ -92,6 +96,8 @@ end
 for j=1:N:M*N
     A(1:N,j:j+N-1)=eye(N);
 end
+
+%% Optimal assignment
 
 if N>=M
     x=linprog(-f,A(1:N,:),b(1:N),A(N+1:N+M,:),b(N+1:N+M),zeros(M*N,1));
@@ -146,17 +152,16 @@ if win==0
         plot3(z(:,1,i),z(:,2,i),z(:,3,i),'b',LineWidth=2)
         plot3(z(:,4,i),z(:,5,i),z(:,6,i),'r',LineWidth=2)
     end
+    netValue=sum(V)
 else
     disp("The evading team wins.")
 end
 
-netValue=sum(V)
-
 %% Writing data
 
-% writematrix(z(:,1:3,1),'xe1.csv','Delimiter','tab')
-% writematrix(z(:,1:3,2),'xe2.csv','Delimiter','tab')
-% writematrix(z(:,1:3,3),'xe3.csv','Delimiter','tab')
-% writematrix(z(:,4:6,1),'xp1.csv','Delimiter','tab')
-% writematrix(z(:,4:6,2),'xp2.csv','Delimiter','tab')
-% writematrix(z(:,4:6,3),'xp3.csv','Delimiter','tab')
+% writematrix(z(:,1:3,1),'xe1_d4.csv','Delimiter','tab')
+% writematrix(z(:,1:3,2),'xe2_d4.csv','Delimiter','tab')
+% % writematrix(z(:,1:3,3),'xe3.csv','Delimiter','tab')
+% writematrix(z(:,4:6,1),'xp1_d4.csv','Delimiter','tab')
+% writematrix(z(:,4:6,2),'xp2_d4.csv','Delimiter','tab')
+% % writematrix(z(:,4:6,3),'xp3.csv','Delimiter','tab')

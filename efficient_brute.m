@@ -1,17 +1,9 @@
-%% Performance Metric
-% This piece of code helps in measuring the time taken to compute 
-% assignment related calculations using brute force method.
+%% Storing the permutation matrix sparsely
 
-sum_time=0;
-num_iter=1;
-
-for avg_timer=1:num_iter
-
-tic;
-tstart=tic;
-assign_mat=perms(1:N);
-assign_mat=assign_mat(:,1:M);
 Nfac=factorial(N);
+assign_mat=sparse(Nfac,N);
+assign_mat=sparse(perms([1,zeros(1,N-1)]));
+assign_mat=assign_mat(:,1:M);
 
 parfor i=1:Nfac
     for j=1:M
@@ -36,6 +28,16 @@ end
 time_taken=toc(tstart);
 sum_time=sum_time+time_taken;
 
-end
 
-avg_time_taken_brute=sum_time/num_iter
+%%
+
+m=3;n=10;
+C = nchoosek(0:m:m*(n-1),m);
+P = perms(1:m);
+for ic = 1:size(C,1)
+ for ip = 1:size(P,1)
+   M = zeros(m,n);
+   M(P(ip,:)+C(ic,:)) = 1;
+   % Do whatever you want to do with M
+ end
+end

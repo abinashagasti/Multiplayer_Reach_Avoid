@@ -3,8 +3,9 @@
 % assignment related calculations.
 
 sum_time=0;
+num_iter=1;
 
-for avg_timer=1:10
+for avg_timer=1:num_iter
 
 tic;
 tstart=tic;
@@ -24,4 +25,4 @@ sum_time=sum_time+time_taken;
 
 end
 
-avg_time_taken_lp=sum_time/10
+avg_time_taken_lp=sum_time/num_iter
