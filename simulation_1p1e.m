@@ -43,7 +43,7 @@ plot3(0,0,0,'go',LineWidth=3,MarkerSize=8)
 
 %% Game of Degree Solution
 
-[t,y]=ode45(@agent_dynamics,[0,10],[xe;xp;alpha;B]);
+[t,y]=ode45(@agent_dynamics_speed,[0,10],[xe;xp;alpha;1;B]);
 
 hold on
 plot3(y(:,1),y(:,2),y(:,3),'b',LineWidth=2)

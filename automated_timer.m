@@ -8,10 +8,10 @@ close all
 
 % Test cases
 
-Ncases=[3,5,7,8,9,10,11];
-Mcases=[3,4,5,8,6,8,7];
+Ncases=[3,5,7,8,9,10,11,12,20,50,100];
+Mcases=[3,4,5,8,6,8,7,10,15,40,100];
 lp_time=zeros(length(Mcases),1);
-brute_time=zeros(length(Ncases),1);
+brute_time=zeros(length(Ncases(1:7)),1);
 
 for test_case=1:length(Ncases)
 
@@ -77,6 +77,9 @@ for test_case=1:length(Ncases)
     lp_time(test_case)=sum_time/10;
 
     % Brute force assignment
+
+    if test_case<=length(brute_time)
+    
     sum_time=0;
 
     for avg_timer=1:10
@@ -111,7 +114,9 @@ for test_case=1:length(Ncases)
     sum_time=sum_time+time_taken;
     
     end
-    
+
     brute_time(test_case)=sum_time/10;
+
+    end
 
 end
