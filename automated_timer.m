@@ -11,6 +11,7 @@ close all
 Ncases=[3,5,7,8,9,10,11,12,20,50,100];
 Mcases=[3,4,5,8,6,8,7,10,15,40,100];
 lp_time=zeros(length(Mcases),1);
+coord_time=zeros(length(Mcases),1);
 brute_time=zeros(length(Ncases(1:7)),1);
 
 for test_case=1:length(Ncases)
@@ -76,37 +77,25 @@ for test_case=1:length(Ncases)
     
     lp_time(test_case)=sum_time/10;
 
-    % Brute force assignment
+    % Coordinates time
 
-    if test_case<=length(brute_time)
-    
     sum_time=0;
 
     for avg_timer=1:10
     
-    tic;
+    I=zeros(3,M);v=zeros(M);
+
     tstart=tic;
-    assign_mat=perms(1:N);
-    assign_mat=assign_mat(:,1:M);
-    Nfac=factorial(N);
     
-    parfor i=1:Nfac
-        for j=1:M
-            assign_val(i,j)=a(j,assign_mat(i,j));
-        end
-    end
-    
-    % for j=1:M
-    %     assign_val(:,j)=a(j,assign_mat(:,j));
-    % end
-    
-    sumarr=sum(assign_val,2);
-    imax=find(sumarr==max(sumarr));
-    x=zeros(M,N,length(imax));
     for i=1:M
-        for k=1:length(imax)
-            j=assign_mat(imax(k),i);
-            x(i,j,k)=1;
+        j=find(x(i,:)==1);
+        xc=(xe(i,:)-alpha(i,j)^2*xp(j,:))/(1-alpha(i,j)^2);
+        rc=(alpha(i,j)/(1-alpha(i,j)^2))*norm(xp(j,:)-xe(i,:));
+        I(:,i)=(1-rc/norm(xc))*xc;
+        if alpha(i,j)==1
+            v(i)=0.5*((norm(xe)^2-norm(xp)^2)/norm(xp-xe));
+        else
+            v(i)=norm(xc)-rc;
         end
     end
     
@@ -114,9 +103,54 @@ for test_case=1:length(Ncases)
     sum_time=sum_time+time_taken;
     
     end
+    
+    coord_time(test_case)=sum_time/10;
 
-    brute_time(test_case)=sum_time/10;
+    % Brute force assignment
 
-    end
+%     if test_case<=length(brute_time)
+%     
+%     sum_time=0;
+% 
+%     for avg_timer=1:10
+%     
+%     tic;
+%     tstart=tic;
+%     assign_mat=perms(1:N);
+%     assign_mat=assign_mat(:,1:M);
+%     Nfac=factorial(N);
+%     
+%     parfor i=1:Nfac
+%         for j=1:M
+%             assign_val(i,j)=a(j,assign_mat(i,j));
+%         end
+%     end
+%     
+%     % for j=1:M
+%     %     assign_val(:,j)=a(j,assign_mat(:,j));
+%     % end
+%     
+%     sumarr=sum(assign_val,2);
+%     imax=find(sumarr==max(sumarr));
+%     x=zeros(M,N,length(imax));
+%     for i=1:M
+%         for k=1:length(imax)
+%             j=assign_mat(imax(k),i);
+%             x(i,j,k)=1;
+%         end
+%     end
+%     
+%     time_taken=toc(tstart);
+%     sum_time=sum_time+time_taken;
+%     
+%     end
+% 
+%     brute_time(test_case)=sum_time/10;
+% 
+%     end
 
 end
+
+    lp_time
+%     brute_time
+    coord_time

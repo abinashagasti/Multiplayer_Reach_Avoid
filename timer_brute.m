@@ -3,15 +3,16 @@
 % assignment related calculations using brute force method.
 
 sum_time=0;
-num_iter=1;
+num_iter=3;
+
+assign_mat=perms(1:N);
+assign_mat=assign_mat(:,1:M);
+Nfac=factorial(N);
 
 for avg_timer=1:num_iter
 
 tic;
 tstart=tic;
-assign_mat=perms(1:N);
-assign_mat=assign_mat(:,1:M);
-Nfac=factorial(N);
 
 parfor i=1:Nfac
     for j=1:M

@@ -8,8 +8,8 @@ close all
 
 % Initiate player positions
 
-N=2;
-M=2;
+N=12;
+M=10;
 
 xp=-10+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
 xe=-10+20*rand(3,M);xe=xe'; % are in rows
@@ -84,12 +84,12 @@ ve=1+rand(M,1);
 % ve=[1;1];vp=[1.5,1.6];
 
 % Nonoptimal play second example
-xp=[-3.9996   -3.1972    8.3785
-   -0.8747   -1.1501   -0.9163];
-xe=[8.9056   -5.6176    7.6481
-   -9.6025   -3.1647    5.3205];
-vp=[1.8428;2.1188];
-ve=[1.4530;1.0102];
+% xp=[-3.9996   -3.1972    8.3785
+%    -0.8747   -1.1501   -0.9163];
+% xe=[8.9056   -5.6176    7.6481
+%    -9.6025   -3.1647    5.3205];
+% vp=[1.8428;2.1188];
+% ve=[1.4530;1.0102];
 
 % Compute static information
 
