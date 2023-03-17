@@ -8,13 +8,13 @@ close all
 
 % Initiate player positions
 
-N=12;
-M=10;
+N=3;
+M=2;
 
-xp=-10+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
-xe=-10+20*rand(3,M);xe=xe'; % are in rows
-vp=1.5+rand(N,1);
-ve=1+rand(M,1);
+% xp=-15+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
+% xe=-15+20*rand(3,M);xe=xe'; % are in rows
+% vp=1.5+rand(N,1);
+% ve=1+rand(M,1);
 
 % For numerical illustrations
 
@@ -26,9 +26,9 @@ ve=1+rand(M,1);
 
 
 % Dispersal surface example
-% xp=[1 0 0;1 0 0.5;1 0 -0.5];
-% xe=[0.75 1 0;0.75 -1 0];
-% vp=ones(3);ve=0.5*ones(2);
+xp=[1 0 0;1 0 0.5;1 0 -0.5];
+xe=[0.75 1 0;0.75 -1 0];
+vp=ones(3);ve=0.5*ones(2);
 
 % Subset of evaders superior to pursuers with N=5, M=3 example
 % xp=[-7.8391   -0.8025   -0.9823;
@@ -79,11 +79,13 @@ ve=1+rand(M,1);
 %     1.2273];
 
 % Nonoptimal play
+
+% Example 1
 % xp=[1,1,1;-1,2,1.5];
 % xe=[-1,-0.5,1.5;0,3,1];
 % ve=[1;1];vp=[1.5,1.6];
 
-% Nonoptimal play second example
+% Example 2
 % xp=[-3.9996   -3.1972    8.3785
 %    -0.8747   -1.1501   -0.9163];
 % xe=[8.9056   -5.6176    7.6481
@@ -91,39 +93,51 @@ ve=1+rand(M,1);
 % vp=[1.8428;2.1188];
 % ve=[1.4530;1.0102];
 
-% Compute static information
+% Examples where changing L changes assignment
 
-% Find alpha and mu matrix that denotes if evader i can be 
-% captured by pursuer j?
-% B=zeros(M,N);mu=zeros(M,N);alpha=zeros(M,N);
-% h=zeros(M,N);c=zeros(M,1);
-% for i=1:M
-%     for j=1:N
-%         alpha(i,j)=ve(i)/vp(j);
-%         B(i,j)=norm(xe(i,:))^2-alpha(i,j)^2*norm(xp(j,:))^2;
-%         if B(i,j)>=0 && alpha(i,j)<=1
-%             mu(i,j)=1;
-%         else
-%             mu(i,j)=0;
-%         end
-%         if mu(i,j)==1
-%             h(i,j)=Value(xp(j,:),xe(i,:),alpha(i,j));
-%         else
-%             h(i,j)=-100;
-%         end
-%         end
-%         c(i)=min(h(i,:));
-% end
-% Before being able to find the solution of the game of kind, one has to
-% look across all possible assignments of evaders to pusuers, and see if
-% there exists any assignment where all evaders can be captured. Simply
-% taking the least value of the mu matrix does not tell us whether all
-% evaders can be captured or not. For a very simple case, take a situation
-% where M>N and all mu values are positive, then clearly their min will
-% also be positive, but that does not imply that the game shall be won by
-% the pursuers, as clearly at least M-N evaders cannot be captured.
+% Example 1
+% xp=[6.4875    9.6533    4.6050;
+%    -3.1225    1.6814   -7.8446;
+%     8.1262    7.5931    6.3552];
+% xe=[-4.7854    1.8871   -9.5497;
+%    -1.4948   -3.7456   -6.7703;
+%    -6.4247   -1.5423   -8.1154];
+% vp=[2.0985;
+%     1.9709;
+%     2.1959];
+% ve=[1.6999;
+%     1.6385;
+%     1.0336];
 
-% Alternate for previous section
+% Example 2
+% xp=[-1.5760   -0.6957   -2.1588;
+%    -6.6190   -7.1848    1.3228;
+%    -8.6514    1.2908    0.7815];
+% xe=[2.0453   -4.8873   -2.2868;
+%     4.0179   -6.1207  -13.7996;
+%     2.3350   -2.3762   -7.8985];
+% vp=[2.4970;
+%     1.7242;
+%     2.1525];
+% ve=[1.6050;
+%     1.3872;
+%     1.1422];
+
+% Example 3
+% xp=[-6.7681   -2.9472    0.0104;
+%    -3.3293   -3.9641   -3.3286;
+%    -4.7636  -13.3481   -0.6086];
+% xe=[4.9231   -7.9093    4.4252;
+%    -8.0710    2.7309   -5.9061;
+%    -6.7315  -10.6454  -12.4869];
+% vp=[1.7089;
+%     2.2261;
+%     2.2829];
+% ve=[1.6938;
+%     1.0098;
+%     1.8432];
+
+%% Computing static information for assignment
 
 B=zeros(M,N);alpha=zeros(M,N);
 a=zeros(M,N);
@@ -133,11 +147,19 @@ for i=1:M
         B(i,j)=norm(xe(i,:))^2-alpha(i,j)^2*norm(xp(j,:))^2;
         if B(i,j)>=0 && alpha(i,j)<=1
             a(i,j)=Value(xp(j,:),xe(i,:),alpha(i,j));
-        else
-            a(i,j)=-100;
         end
     end
 end
+% L=sum(max(a,[],2));
+L=-1;
+for i=1:M
+    for j=1:N
+        if a(i,j)==0
+            a(i,j)=-L-1;
+        end
+    end
+end
+
 a
 % Optimal Assignment
 
@@ -206,16 +228,17 @@ xlabel('x');ylabel('y');zlabel('z');
 
 if win==0
     disp("The pursuing team wins!")
-    z=zeros(1501,9,M);
+    T=15;
+    z=zeros(T*100+1,9,M);
     V=zeros(M,1);
     for i=1:M
         j=find(x(i,:)==1);
         V(i)=Value(xp(j,:),xe(i,:),alpha(i,j));
-        [t,y]=ode45(@agent_dynamics_speed,[0:0.01:15],[xe(i,:)';xp(j,:)';ve(i);vp(j);B(i,j)]);
+        [t,y]=ode45(@agent_dynamics_speed,0:0.01:T,[xe(i,:)';xp(j,:)';ve(i);vp(j);B(i,j)]);
         z(:,:,i)=y;
         plot3(z(:,1,i),z(:,2,i),z(:,3,i),'b',LineWidth=2)
         plot3(z(:,4,i),z(:,5,i),z(:,6,i),'r',LineWidth=2)
-    end
+    end 
     netValue=sum(V)
 else
     disp("The evading team wins.")
