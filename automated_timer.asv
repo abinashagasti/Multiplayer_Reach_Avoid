@@ -156,8 +156,9 @@ for test_case=1:length(Ncases)
     sum_time=0;
     num_iter=10;
     
-    assign_mat=nchoosek(1:N,M);
-    assign_mat=reshape(assign_mat(:,perms(1:M)),[],M);
+    % assign_mat=perms(1:N);
+    % assign_mat=assign_mat(:,1:M);
+    assign_mat=npermutek(1:N,M);
     Nfac=factorial(N);
     NMdiff_fac=factorial(N-M);
     
@@ -166,7 +167,7 @@ for test_case=1:length(Ncases)
     tic;
     tstart=tic;
     
-    parfor i=1:Nfac/NMdiff_fac
+    parfor i=1:Nfac/
         for j=1:M
             assign_val(i,j)=a(j,assign_mat(i,j));
         end
@@ -191,7 +192,7 @@ for test_case=1:length(Ncases)
     
     end
     
-    brute_time(test_case)=sum_time/num_iter;
+    brute_time(test_case)=sum_time/num_iter
 
     end
 

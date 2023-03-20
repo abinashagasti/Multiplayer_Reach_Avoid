@@ -8,13 +8,13 @@ close all
 
 % Initiate player positions
 
-N=3;
-M=2;
+N=12;
+M=10;
 
-% xp=-15+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
-% xe=-15+20*rand(3,M);xe=xe'; % are in rows
-% vp=1.5+rand(N,1);
-% ve=1+rand(M,1);
+xp=-15+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
+xe=-15+20*rand(3,M);xe=xe'; % are in rows
+vp=1.5+rand(N,1);
+ve=1+rand(M,1);
 
 % For numerical illustrations
 
@@ -26,9 +26,9 @@ M=2;
 
 
 % Dispersal surface example
-xp=[1 0 0;1 0 0.5;1 0 -0.5];
-xe=[0.75 1 0;0.75 -1 0];
-vp=ones(3);ve=0.5*ones(2);
+% xp=[1 0 0;1 0 0.5;1 0 -0.5];
+% xe=[0.75 1 0;0.75 -1 0];
+% vp=ones(3);ve=0.5*ones(2);
 
 % Subset of evaders superior to pursuers with N=5, M=3 example
 % xp=[-7.8391   -0.8025   -0.9823;
@@ -137,7 +137,7 @@ vp=ones(3);ve=0.5*ones(2);
 %     1.0098;
 %     1.8432];
 
-%% Computing static information for assignment
+% Computing static information for assignment
 
 B=zeros(M,N);alpha=zeros(M,N);
 a=zeros(M,N);
@@ -150,8 +150,8 @@ for i=1:M
         end
     end
 end
-% L=sum(max(a,[],2));
-L=-1;
+L=sum(max(a,[],2));
+% L=-1;
 for i=1:M
     for j=1:N
         if a(i,j)==0
@@ -197,8 +197,8 @@ end
 % would be zero else the solution is not optimal. So nonassignment means
 % capture is not possible. 
 
-x_relax=linprog(-f,A,b,[],[],zeros(M*N,1));
-x_relax=reshape(x_relax,[N,M])';
+% x_relax=linprog(-f,A,b,[],[],zeros(M*N,1));
+% x_relax=reshape(x_relax,[N,M])';
 % 
 % sum(sum(x-x_relax))
 
