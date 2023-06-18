@@ -8,8 +8,8 @@ close all
 
 % Initiate player positions
 
-N=12;
-M=10;
+N=4;
+M=3;
 
 xp=-15+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
 xe=-15+20*rand(3,M);xe=xe'; % are in rows
@@ -161,35 +161,35 @@ for i=1:M
 end
 
 a
-% Optimal Assignment
+
+%% Optimal Assignment
 
 % First, we shall find the optimal assignment, because if in the optimal
 % assignment the pursuing team wins, then clearly evaders cannot win under
 % any condition if the pursuing team plays optimally. 
-% for j=1:N
-%     a(:,j)=h(:,j)-c;
+
+% f=a';f=f(:);
+% b=ones(M+N,1);
+% A=zeros(M+N,M*N);
+% for i=N+1:M+N
+%     A(i,(i-N-1)*N+1:(i-N)*N)=1;
 % end
-% a=h;
-f=a';f=f(:);
-b=ones(M+N,1);
-A=zeros(M+N,M*N);
-for i=N+1:M+N
-    A(i,(i-N-1)*N+1:(i-N)*N)=1;
-end
-for j=1:N:M*N
-    A(1:N,j:j+N-1)=eye(N);
-end
+% for j=1:N:M*N
+%     A(1:N,j:j+N-1)=eye(N);
+% end
+% 
+% % Optimal assignment
+% 
+% if N>=M
+%     x=linprog(-f,A(1:N,:),b(1:N),A(N+1:N+M,:),b(N+1:N+M),zeros(M*N,1));
+%     x=reshape(x,[N,M])'
+% end
+% if N<M
+%     x=linprog(-f,A(N+1:N+M,:),b(N+1:N+M),A(1:N,:),b(1:N),zeros(M*N,1));
+%     x=reshape(x,[N,M])';
+% end
 
-% Optimal assignment
-
-if N>=M
-    x=linprog(-f,A(1:N,:),b(1:N),A(N+1:N+M,:),b(N+1:N+M),zeros(M*N,1));
-    x=reshape(x,[N,M])'
-end
-if N<M
-    x=linprog(-f,A(N+1:N+M,:),b(N+1:N+M),A(1:N,:),b(1:N),zeros(M*N,1));
-    x=reshape(x,[N,M])';
-end
+x=opt_assgn(a,M,N,"primal")
 
 % This was done to ensure that agents in the lower numbner team are
 % assigned some agent of the opposite team. But it is not necessary, as if
@@ -197,12 +197,7 @@ end
 % would be zero else the solution is not optimal. So nonassignment means
 % capture is not possible. 
 
-% x_relax=linprog(-f,A,b,[],[],zeros(M*N,1));
-% x_relax=reshape(x_relax,[N,M])';
-% 
-% sum(sum(x-x_relax))
-
-% Game of Kind
+%% Game of Kind
 
 % Using the optimal assignment we can determine the winning team. If for
 % every evader there exists a pursuer that can capture it, then the
@@ -212,10 +207,31 @@ win=0;
 % win=0 indicates the pursuer wins, while win=1 indicates the evader wins
 check=a.*x;
 if min(check(:))<0
-    win=1;
+    win=1
 else
-    win=0;
+    win=0
 end
+
+%% Dual of game 
+
+% Considering the dual of the optimal assignment LP
+
+y=opt_assgn(a,M,N,"dual")
+p=zeros(N,1);
+for j=1:N
+    if sum(x(:,j))==0
+        p(j)=y(j);
+    else
+        i=find(x(:,j)==1);
+        p(j)=y(j)+y(N+i)-y(N+M+i);
+    end
+end
+
+% Check if payoff vector is in core
+% 
+% S=dec2bin(0:2^N-1)-'0'; % Denotes all possible subsets of N in binary 
+% S=[S,zeros(2^N,1)];
+% S=characteristic(S,a,M,N);
 
 %% Game of Degree
 
