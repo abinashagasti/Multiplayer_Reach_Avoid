@@ -27,7 +27,8 @@ function dydt = agent_dynamics_speed(t,y)
             gradV=[-(1/alpha)*(xe/Re);xp/Rp];
             rhoe=norm(gradV(1:3,1));
             rhop=norm(gradV(4:6,1)); 
-            dydt=[(alpha/rhoe)*gradV(1:3,1);-(1/rhop)*gradV(4:6,1);0;0;0];
+%             dydt=[(alpha/rhoe)*gradV(1:3,1);-(1/rhop)*gradV(4:6,1);0;0;0];
+            dydt=[(ve/rhoe)*gradV(1:3,1);-(vp/rhop)*gradV(4:6,1);0;0;0];
         else
             dydt=zeros(9,1);
         end

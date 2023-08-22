@@ -4,7 +4,12 @@ function v = Value(xp,xe,alpha)
 
 if alpha==1
     v=0.5*((norm(xe)^2-norm(xp)^2)/norm(xp-xe));
-else
+else if alpha<1
     [xc,rc]=apollonius_parameters(xp,xe,alpha,0);
     v=norm(xc)-rc;
+else
+    v=norm(xp)-norm(xe)/alpha;
+    v=-v;
+end
+
 end

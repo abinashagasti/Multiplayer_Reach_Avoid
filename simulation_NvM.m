@@ -6,15 +6,17 @@ clear
 clc
 close all
 
+set(0,'DefaultFigureWindowStyle','docked')
+
 % Initiate player positions
 
-N=4;
+N=3;
 M=3;
 
-xp=-15+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
-xe=-15+20*rand(3,M);xe=xe'; % are in rows
-vp=1.5+rand(N,1);
-ve=1+rand(M,1);
+% xp=-15+20*rand(3,N);xp=xp'; % xp,xe = coordinates of pursuers and evaders
+% xe=-15+20*rand(3,M);xe=xe'; % are in rows
+% vp=1.5+rand(N,1);
+% ve=1+rand(M,1);
 
 % For numerical illustrations
 
@@ -137,6 +139,36 @@ ve=1+rand(M,1);
 %     1.0098;
 %     1.8432];
 
+% Examples for evader winning play in evader winning region
+
+% Example 1
+% xp=[ -13.8076   -1.3606  -14.1514;
+%   -13.5711   -4.5670  -13.0654;
+%     1.3630    1.3509   -0.5512];
+% xe=[-12.0027   -1.8079   -4.6281;
+%     4.4595   -2.0202    1.0066;
+%    -5.9240   -6.3522    1.5063];
+% vp=[1.5835;
+%     1.6332;
+%     1.6734];
+% ve=[1.3909;
+%     1.8314;
+%     1.8034];
+
+% Example 2
+xp=[0.3823,-7.0642,1.1703;
+    0.1015,-7.4521,-10.6796;
+    0.8081,3.9861,-8.4487];
+xe=[-1.5747,-6.2271,1.6700;
+    0.3771,-11.6549,2.2396;
+    4.7974,-4.7115,2.6856];
+vp=[2.0880;
+    1.6548;
+    1.6999];
+ve=[1.4070;
+    1.7487;
+    1.8256];
+
 % Computing static information for assignment
 
 B=zeros(M,N);alpha=zeros(M,N);
@@ -212,11 +244,37 @@ else
     win=0
 end
 
+% Check the condition that the evaders who are allotted to pursuers such
+% that 
+check_cond=0;
+evader_contributions=sum(a.*x,2);
+for i=1:length(evader_contributions)
+    if evader_contributions(i)<=0
+        index=find(x(i,:)==1);
+        if B(i,index)<=0
+            check_cond=0
+        else
+            check_cond=1
+        end
+    end
+end
+
+% Augmenting a matrix
+ae=a;
+for i=1:size(a,1)
+    for j=1:size(a,2)
+        if a(i,j)<=0 && B(i,j)<0
+           ae(i,j)=Value(xp(j,:),xe(i,:),alpha(i,j));
+        end
+    end
+end
+
+
 %% Dual of game 
 
 % Considering the dual of the optimal assignment LP
 
-y=opt_assgn(a,M,N,"dual")
+y=opt_assgn(a,M,N,"dual");
 p=zeros(N,1);
 for j=1:N
     if sum(x(:,j))==0
@@ -235,6 +293,8 @@ end
 
 %% Game of Degree
 
+figure
+
 plot3(0,0,0,'go',LineWidth=3,MarkerSize=8)
 hold on
 plot3(xp(:,1),xp(:,2),xp(:,3), 'ro',LineWidth=3,MarkerSize=8)
@@ -244,6 +304,11 @@ xlabel('x');ylabel('y');zlabel('z');
 
 if win==0
     disp("The pursuing team wins!")
+else
+    disp("The evading team wins!")
+end
+
+if check_cond==0
     T=15;
     z=zeros(T*100+1,9,M);
     V=zeros(M,1);
@@ -256,8 +321,6 @@ if win==0
         plot3(z(:,4,i),z(:,5,i),z(:,6,i),'r',LineWidth=2)
     end 
     netValue=sum(V)
-else
-    disp("The evading team wins.")
 end
 
 %% Writing data
