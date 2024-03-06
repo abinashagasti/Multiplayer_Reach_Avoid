@@ -17,13 +17,14 @@ win = env.check_initialization(pursuer, evaders, false); % Check win scenario
 %% Setting some positions 
 
 pursuer.updatePos([1,0]);
-evaders(1).updatePos([5,2]);
-evaders(2).updatePos([3,4]);
-evaders(3).updatePos([-1,6]);
+evaders(1).updatePos([,1]);
 env.update_target([4,3]);
 
 %%
 
-evader_positions = env.return_evader_positions(evaders);
+evaders_position = [1, -1;1, 1];
 
-[theta_min, theta_max] = pursuer.concave_domain(evader_positions, env.target_position)
+[~, theta] = pursuer.optimal_headings_Ei(evaders_position, env.target_position);
+pursuer.objective_Ei(evaders_position, env.target_position, 0.01, theta);
+[theta_min, theta_max] = pursuer.concave_domain(evaders_position, env.target_position);
+pursuer.heading_direction(evaders_position, env.target_position, 0.01)

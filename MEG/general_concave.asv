@@ -33,14 +33,10 @@ mod(theta - delta - theta_local, 2*pi) % should be equal to zero
 
 Tx = abs(m*yt+xt-m*ym-xm)/sqrt(1+m^2);
 Ty = abs(yt-m*xt-ye-m*xe)/sqrt(1+m^2);
-k = norm([xp,yp]-[xe,ye])/2;
 r = 0.01;
 theta_values = linspace(theta-pi/2, theta+pi/2, 100);
 d = zeros(length(theta_values),1);
 
 for i=1:length(theta_values)
     angle = theta_values(i);
-    d(i) = Tx + (r/(2*k))*sqrt(Ty^2+k^2)*(-1-cos(angle+psi-2*delta));
-end
-
-plot(theta_values, d)
+    d(i) = Tx + 

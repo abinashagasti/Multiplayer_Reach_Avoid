@@ -1,0 +1,19 @@
+%% Testing usage of convex minimization
+
+clear
+clc
+
+y = 5;
+
+xmin = -10; xmax = 10;
+
+A = [1;-1]; b = [xmax;-xmin];
+
+fun = @(x) test_fun(x,y);
+
+fmincon(fun,0,A,b)
+
+fun(3)
+
+%% Testing pursuer class functions
+

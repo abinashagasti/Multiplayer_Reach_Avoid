@@ -29,7 +29,7 @@ classdef Evader < handle
             position = e.position;
         end
 
-        function velocity = heading_velocity(e, pursuer_position, target_position)
+        function [velocity, psi] = heading_velocity(e, pursuer_position, target_position)
             xc = (e.position(1)+pursuer_position(1))/2;
             yc = (e.position(2)+pursuer_position(2))/2;
             m = (e.position(2)-pursuer_position(2))/(e.position(1)-pursuer_position(1));
@@ -37,8 +37,9 @@ classdef Evader < handle
             x_intercept = (m*(yc - target_position(2))+xc+m^2*target_position(1))/(1+m^2);
             y_intercept = target_position(2) + m*(x_intercept - target_position(1));
             
-            velocity = [x_intercept - e.position(1), y_intercept - e.position(2)];
+            velocity = [x_intercept - e.position(1), y_intercept - e.position(2)]';
             velocity = (e.speed/norm(velocity,2))*(velocity);
+            psi = atan2(velocity(2),velocity(1));
         end
 
     end
