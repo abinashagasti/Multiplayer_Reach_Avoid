@@ -2,12 +2,14 @@ classdef Evader < handle
     properties
         position % 2x1 vector representing current position
         speed % scalar representing maximum speed
+        index % integer indexing of each evader
     end
     methods
-        function e = Evader(initPos, speed)
+        function e = Evader(initPos, speed, index)
             % Constructor, assigns initial values
             e.position = initPos;
             e.speed = speed;
+            e.index = index;
         end
         
         function updatePos(e, position)

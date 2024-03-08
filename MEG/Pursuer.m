@@ -76,8 +76,8 @@ classdef Pursuer < handle
         end
 
         function cost = objective_fun(p, evader_positions, target_position, r, theta)
-            shape = evader_positions;
-            n = shape(1);
+            shape = size(evader_positions);
+            n = shape(2);
             cost = 0;
             for i=1:n
                 cost = cost + 1/(p.objective_Ei(evader_positions(:,i),target_position,r,theta));
@@ -87,12 +87,11 @@ classdef Pursuer < handle
         function theta = heading_direction(p, evader_positions, target_position, r)
             cost = @(theta) p.objective_fun(evader_positions, target_position, r, theta);
             [theta_min, theta_max, ~, ~] = p.concave_domain(evader_positions, target_position);
-            A = [-1;1]; b = [theta_min; theta_max];
             options = optimoptions("fmincon",...
                     "Algorithm","interior-point",...
                     "EnableFeasibilityMode",true,...
-                    "SubproblemAlgorithm","cg");
-            theta = fmincon(cost,0.5*(theta_min+theta_max),A,b);
+                    "SubproblemAlgorithm","cg", "Display","none");
+            theta = fmincon(cost,0.5*(theta_min+theta_max),[],[],[],[],theta_min,theta_max,[],options);
         end
 
         function [velocity, theta] = heading_velocity(p, evader_positions, target_position, r)

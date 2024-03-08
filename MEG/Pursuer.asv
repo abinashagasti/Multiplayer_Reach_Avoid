@@ -67,16 +67,17 @@ classdef Pursuer < handle
                 error("The max range of heading angles is more than pi. Cannot handle such situations.")
             end
             theta_keys = theta_keys(sort_order);
-            [theta_max, max_evader] = max(theta_values);
-            [theta_min, min_evader] = min(theta_values);
+            [theta_largest, max_evader] = max(theta_values);
+            [theta_smallest, min_evader] = min(theta_values);
             max_evader = theta_keys(max_evader);
             min_evader = theta_keys(min_evader);
-            
+            theta_min = max(theta_smallest, theta_largest-pi/2);
+            theta_max = min(theta_largest, theta_smallest+pi/2);
         end
 
         function cost = objective_fun(p, evader_positions, target_position, r, theta)
-            shape = evader_positions;
-            n = shape(1);
+            shape = size(evader_positions);
+            n = shape(2);
             cost = 0;
             for i=1:n
                 cost = cost + 1/(p.objective_Ei(evader_positions(:,i),target_position,r,theta));
@@ -87,7 +88,11 @@ classdef Pursuer < handle
             cost = @(theta) p.objective_fun(evader_positions, target_position, r, theta);
             [theta_min, theta_max, ~, ~] = p.concave_domain(evader_positions, target_position);
             A = [-1;1]; b = [theta_min; theta_max];
-            theta = fmincon(cost,0.5*(theta_min+theta_max),A,b);
+            options = optimoptions("fmincon",...
+                    "Algorithm","interior-point",...
+                    "EnableFeasibilityMode",true,...
+                    "SubproblemAlgorithm","cg");
+            theta = fmincon(cost,0.5*(theta_min+theta_max),A,b,[],[],options);
         end
 
         function [velocity, theta] = heading_velocity(p, evader_positions, target_position, r)
