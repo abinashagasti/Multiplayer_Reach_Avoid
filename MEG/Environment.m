@@ -93,12 +93,12 @@ classdef Environment < handle
         end
 
         function plot_current_positions(env, pursuer, evaders)
-            plot(pursuer.position(1), pursuer.position(2), '.', 'color', 'r', 'MarkerSize', 30)
             hold on
             for i=1:env.evader_numbers
                 plot(evaders(i).position(1), evaders(i).position(2), '.', 'color', 'b', 'MarkerSize', 30)
             end
             plot(env.target_position(1), env.target_position(2), '.', 'color', 'g', 'MarkerSize', 30)
+            plot(pursuer.position(1), pursuer.position(2), '.', 'color', 'r', 'MarkerSize', 30)
             hold off
         end
 
@@ -119,7 +119,7 @@ classdef Environment < handle
         function updateTermination(env, pursuer, evaders)
             env.captured_evaders = boolean(zeros(1,env.evader_numbers));
             for i=1:env.evader_numbers
-                if norm(pursuer.position-evaders(i).position)<0.1
+                if norm(pursuer.position-evaders(i).position)<0.01
                     env.captured_evaders(i) = true;
                 end
             end
@@ -161,7 +161,7 @@ classdef Environment < handle
             end
             plot(pursuer_positions_traj(1,:),pursuer_positions_traj(2,:),'r')
             for i=1:env.evader_numbers
-                plot(evader_positions_traj(1,:,i),plot(evader_positions_traj(2,:,i)),'b')
+                plot(evader_positions_traj(1,:,i),evader_positions_traj(2,:,i),'b')
             end
             env.plot_current_positions(pursuer, evaders)
         end

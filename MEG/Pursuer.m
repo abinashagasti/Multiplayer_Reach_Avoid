@@ -63,9 +63,9 @@ classdef Pursuer < handle
                 theta_values(i) = theta_star;
             end
             [theta_values, sort_order] = sort(theta_values);
-            if theta_values(n)-theta_values(1)>pi
-                error("The max range of heading angles is more than pi. Cannot handle such situations.")
-            end
+            % if theta_values(n)-theta_values(1)>pi
+            %    error("The max range of heading angles is more than pi. Cannot handle such situations.")
+            % end
             theta_keys = theta_keys(sort_order);
             [theta_largest, max_evader] = max(theta_values);
             [theta_smallest, min_evader] = min(theta_values);
