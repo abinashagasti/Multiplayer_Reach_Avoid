@@ -92,6 +92,14 @@ classdef Environment < handle
             end
         end
 
+        function evader_names = return_evader_names(env, evaders)
+            evader_names = strings(1,env.evader_numbers);
+            for i=1:env.evader_numbers
+                evaders(i).name = "evader"+int2str(evaders(i).index);
+                evader_names(i) = evaders(i).name;
+            end
+        end
+
         function plot_current_positions(env, pursuer, evaders)
             hold on
             for i=1:env.evader_numbers
@@ -136,8 +144,8 @@ classdef Environment < handle
             evader_positions = env.return_evader_positions(evaders);
             evader_velocities = env.return_evader_velocities(pursuer, evaders);
             pursuer.updatePos(pursuer.position + env.timestep*pursuer_velocity);
-            for i=1:evader_list(~env.captured_evaders)
-                evaders(i).updatePos(evader_positions(:,i) + env.timestep*evader_velocities(:,i));
+            for i=evader_list(~env.captured_evaders)
+                evaders(i).updatePos(evaders(i).position + env.timestep*evader_velocities(:,i));
             end
             done = false;
         end

@@ -3,6 +3,7 @@ classdef Evader < handle
         position % 2x1 vector representing current position
         speed % scalar representing maximum speed
         index % integer indexing of each evader
+        name % evader name string
     end
     methods
         function e = Evader(initPos, speed, index)
