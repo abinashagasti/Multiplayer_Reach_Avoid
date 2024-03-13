@@ -112,7 +112,7 @@ classdef Environment < handle
 
         function evader_positions = return_evader_positions(env, evaders)
             evader_positions = zeros(env.motion_space_dimension,env.evader_numbers);
-            for i=1:length(evaders)
+            for i=1:length(evader)
                 evader_positions(:,i) = evaders(i).position;
             end
         end
@@ -135,12 +135,16 @@ classdef Environment < handle
 
         function done = step(env, pursuer, evaders)
             env.updateTermination(pursuer,evaders);
+            % env.captured_evaders
             if ~any(~env.captured_evaders)
                 done = true;
                 return
             end
-            evader_list = 1:env.evader_numbers; 
+            evader_list = 1:env.evader_numbers;
+            disp(length(evaders))
+            disp(env.evader_numbers)
             pursuer_velocity = pursuer.heading_velocity(env.return_evader_positions(evaders(evader_list(~env.captured_evaders))), env.target_position, env.timestep);
+            evader_positions = env.return_evader_positions(evaders);
             evader_velocities = env.return_evader_velocities(pursuer, evaders);
             pursuer.updatePos(pursuer.position + env.timestep*pursuer_velocity);
             for i=evader_list(~env.captured_evaders)
