@@ -2,6 +2,9 @@ classdef Pursuer < handle
     properties (SetAccess = public)
         position % 2x1 vector representing current position
         speed % scalar representing maximum speed
+        motor1 % motor variables 
+        motor2
+        motor3
     end
 
     methods
@@ -99,5 +102,25 @@ classdef Pursuer < handle
             velocity = p.speed*[cos(theta);sin(theta)];
         end
 
+        function init_start_mtr(p,myev3)
+            p.motor1 = motor(myev3,'A');
+            p.motor2 = motor(myev3,'B');
+            p.motor3 = motor(myev3,'C');
+            start(p.motor1);
+            start(p.motor2);
+            start(p.motor3);
+        end
+
+        function stop_mtr(p)
+            stop(p.motor1);
+            stop(p.motor2);
+            stop(p.motor3);
+        end
+
+        function set_mtr_speed(p,speed)
+            p.motor1.Speed = speed(1);
+            p.motor1.Speed = speed(2);
+            p.motor1.Speed = speed(3);
+        end
     end
 end
