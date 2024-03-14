@@ -3,6 +3,7 @@ classdef Evader < handle
         position % 2x1 vector representing current position
         speed % scalar representing maximum speed
         index % integer indexing of each evader
+        name % evader name string
         motor1 % motor variables 
         motor2
         motor3
@@ -13,6 +14,7 @@ classdef Evader < handle
             e.position = initPos;
             e.speed = speed;
             e.index = index;
+            e.name = "evader"+int2str(index);
         end
         
         function updatePos(e, position)
