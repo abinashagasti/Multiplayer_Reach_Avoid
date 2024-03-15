@@ -1,35 +1,59 @@
 classdef env_hardware < Environment
-    properties
-        pos_vrpn
-        ori_vrpn
-    end
+    
 
     methods 
         function env = env_hardware(N,n,v,u,r,pursuer_poisition,evader_positions, target_position)
             env= env@Environment(N,n,v,u,r,pursuer_poisition,evader_positions,target_position);
             rosinit
+            p = Pursuer()
             robotpos_p = rossubscriber("/vrpn_client_node/pursuer/pose",@env.pursuer.callback,"DataFormat","struct");
-            robotpos_e = Subscriber.empty(env.evader_numbers,0);
-            for i = 1:env.envader_numbers
-                evader = env.evaders(i);
-                robotpos_e(i) = rossubscriber("/vrpn_client_node/"+"evader"+int2str(i)+"/pose",@evader.callback,"DataFormat","struct");
+            pause(0.5)
+            for i =1:2
+                disp("dsfsd")
+                disp(env.pursuer.pos_vrpn)
+            end
+            
+            disp("hi")
+%             env.pursuer.updatePos(env.pursuer.pos_vrpn);
+%             robotpos_e = Subscriber.empty(env.evader_numbers,0);
+%             for i = 1:env.envader_numbers
+%                 evader = env.evaders(i);
+%                 robotpos_e(i) = rossubscriber("/vrpn_client_node/"+env.evaders(i).name+"/pose",@evader.callback,"DataFormat","struct");
+%                 env.evaders(i).updatePos(env.evaders(i).pos_vrpn);
+%             end
+%             disp(env.pursuer.pos_vrpn)
+        end
+        function wheel_omega = transform(env,agent,vel_g)
+            ori = quat2eul(agent.ori_vrpn);
+            yaw = ori(3);
+            R_rot = [cos(yaw),sin(yaw);-sin(yaw),cos(yaw)];
+            robot_vel_r = R_rot*vel_g;
+            r = agent.wheel_radius; d= agent.wheel_centre_radius;
+            jacobian = (1/r)*[-d 1 0;-d -0.5 -sin(pi/3);-d -0.5 +sin(pi/3)];
+            wheel_omega = jacobian*robot_vel_r;
+        end
+        function setup_hw(env,pursuer_vg,evaders_vg)
+            pursuer_v_mtr = env.transform(env.pursuer,pursuer_vg);
+            env.pursuer.set_mtr_speed(pursuer_v_mtr);
+            for i = 1:env.evader_numbers
+                evader_v_mtr = env.transform(env.evaders(i),evaders_vg(i));
+                env.evaders(i).set_mtr_speed(evader_v_mtr);
             end
         end
 
-
-        function done = step(env, pursuer, evaders)
-            env.updateTermination(pursuer,evaders);
+         function done = step(env)
+            env.updateTermination();
             if ~any(~env.captured_evaders)
                 done = true;
                 return
             end
-            evader_list = 1:env.evader_numbers;
-            pursuer_velocity = pursuer.heading_velocity(env.return_evader_positions(evaders(evader_list(~env.captured_evaders))), env.target_position, env.timestep);
-            evader_positions = env.return_evader_positions(evaders);
-            evader_velocities = env.return_evader_velocities(pursuer, evaders);
-            pursuer.updatePos(pursuer.position + env.timestep*pursuer_velocity);
-            for i=1:evader_list(~env.captured_evaders)
-                evaders(i).updatePos(evader_positions(:,i) + env.timestep*evader_velocities(:,i));
+            evader_list = 1:env.evader_numbers; 
+            pursuer_velocity = env.pursuer.heading_velocity(env.return_evader_positions(env.evaders(evader_list(~env.captured_evaders))), env.target_position, env.timestep);
+            evader_velocities = env.return_evader_velocities();
+            env.step_hw(pursuer_velocity,evader_velocities);
+            env.pursuer.updatePos(env.pursuer.pos_vrpn);
+            for i=evader_list(~env.captured_evaders)
+                env.evaders(i).updatePos(env.evaders(i).pos_vrpn);
             end
             done = false;
         end

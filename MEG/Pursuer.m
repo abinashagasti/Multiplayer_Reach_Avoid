@@ -5,6 +5,10 @@ classdef Pursuer < handle
         motor1 % motor variables 
         motor2
         motor3
+        pos_vrpn
+        ori_vrpn
+        wheel_radius
+        wheel_centre_radius
     end
 
     methods
@@ -13,6 +17,8 @@ classdef Pursuer < handle
             % Constructor, assigns initial values
             p.position = initPos;
             p.speed = speed;
+            p.wheel_radius = 0.025;
+            p.wheel_centre_radius = 0.15;
         end
         
         function updatePos(p, position)
@@ -121,6 +127,12 @@ classdef Pursuer < handle
             p.motor1.Speed = speed(1);
             p.motor1.Speed = speed(2);
             p.motor1.Speed = speed(3);
+        end
+
+        function callback(p,message)
+            disp("poda")
+            p.pos_vrpn =[message.Pose.Position.X message.Pose.Position.Y message.Pose.Position.Z];
+            p.ori_vrpn = [message.Pose.Orientation.X message.Pose.Orientation.Y message.Pose.Orientation.Z message.Pose.Orientation.W]; 
         end
     end
 end

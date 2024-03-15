@@ -11,6 +11,7 @@ function sub_callback(~, message)
     % Declare global variables to store position and orientation
     global pos_vrpn
     global orient_vrpn
+    disp("hi")
     
     % Extract position and orientation from the ROS message and assign the
     % data to the global variables.
