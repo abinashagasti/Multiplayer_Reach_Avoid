@@ -160,7 +160,7 @@ classdef Pursuer < handle
                     theta = p.heading_direction_squaresum(evader_positions, target_position, r);
                 elseif matches(objective_function,'squaresump')
                     theta = p.heading_direction_squaresump(evader_positions, target_position, r);
-                elseif matches(objective_function,'heuristic')
+                elseif matches(objective_function,'heu')
                     theta = p.heading_direction_heuristic(evader_positions, target_position, r);
                 else
                     disp('Wrong objective function input to function pursuer.heading_velocity. Give a string from the options: standard, squaresum, squaresump, heuristic.')

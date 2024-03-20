@@ -146,22 +146,11 @@ classdef Environment < handle
             %     done = true;
             %     return
             % end
-            done = false;
             if all(env.captured_evaders)
                 done = true;
                 return
             end
-            evader_list = 1:env.evader_numbers;
-            if ~done
-                for i=evader_list(~env.captured_evaders)
-                    if norm(env.evaders(i).position- env.target_position)<env.capture_tolerance && norm(env.pursuer.position-env.target_position)>2*env.capture_tolerance
-                        done = true;
-                        disp_message = strcat(env.evaders(i).name,' reached the target.');
-                        disp(disp_message)
-                        return
-                    end
-                end
-            end
+            evader_list = 1:env.evader_numbers; 
             win = env.check_initialization(env.evaders(evader_list(~env.captured_evaders)),false);
             pursuer_velocity = env.pursuer.heading_velocity(env.return_evader_positions(env.evaders(evader_list(~env.captured_evaders))), env.target_position, env.timestep, win, objective_function);
             evader_velocities = env.return_evader_velocities();
@@ -169,6 +158,7 @@ classdef Environment < handle
             for i=evader_list(~env.captured_evaders)
                 env.evaders(i).updatePos(env.evaders(i).position + env.timestep*evader_velocities(:,i));
             end
+            done = false;
         end
 
 
