@@ -42,8 +42,8 @@ classdef Evader < handle
             position = e.position;
         end
 
-        function [velocity, psi] = heading_velocity(e, pursuer_position, target_position, win)
-            if win
+        function [velocity, psi] = heading_velocity(e, pursuer_position, target_position, win, alpha)
+            if win && alpha==1
                 xc = (e.position(1)+pursuer_position(1))/2;
                 yc = (e.position(2)+pursuer_position(2))/2;
                 m = (e.position(2)-pursuer_position(2))/(e.position(1)-pursuer_position(1));
@@ -51,6 +51,16 @@ classdef Evader < handle
                 x_intercept = (m*(yc - target_position(2))+xc+m^2*target_position(1))/(1+m^2);
                 y_intercept = target_position(2) + m*(x_intercept - target_position(1));
                 
+                velocity = [x_intercept - e.position(1), y_intercept - e.position(2)]';
+            elseif win && alpha<1
+                xc = (e.position(1)-alpha^2*pursuer_position(1))/(1-alpha^2);
+                yc = (e.position(2)-alpha^2*pursuer_position(2))/(1-alpha^2);
+                rc = (alpha/(1-alpha^2))*norm(pursuer_position-e.position);
+                Rc = norm([xc;yc]-target_position);
+
+                x_intercept = target_position(1)+(1-(rc/Rc))*xc;
+                y_intercept = target_position(2)+(1-(rc/Rc))*yc;
+
                 velocity = [x_intercept - e.position(1), y_intercept - e.position(2)]';
             else
                 sz_target = size(target_position);

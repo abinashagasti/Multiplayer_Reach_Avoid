@@ -152,6 +152,19 @@ classdef Pursuer < handle
             theta = weights*theta_star';
         end
 
+        function theta = heading_direction_closest(p, evader_positions)
+            shape = size(evader_positions);
+            dist = Inf;
+            imin = 0;
+            for i=1:shape(2)
+                if dist>norm(p.position-evader_positions(:,i))
+                    dist = norm(p.position-evader_positions(:,i));
+                    imin = i;
+                end
+            end
+            theta = atan2(evader_positions(2,imin)-p.position(2),evader_positions(1,imin)-p.position(1));
+        end
+
         function [velocity, theta] = heading_velocity(p, evader_positions, target_position, r, win, objective_function)
             if win
                 if matches(objective_function,'standard')
@@ -162,6 +175,8 @@ classdef Pursuer < handle
                     theta = p.heading_direction_squaresump(evader_positions, target_position, r);
                 elseif matches(objective_function,'heuristic')
                     theta = p.heading_direction_heuristic(evader_positions, target_position, r);
+                elseif matches(objective_function,'closest')
+                    theta = p.heading_direction_closest(evader_positions);
                 else
                     disp('Wrong objective function input to function pursuer.heading_velocity. Give a string from the options: standard, squaresum, squaresump, heuristic.')
                 end

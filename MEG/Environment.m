@@ -7,9 +7,10 @@ classdef Environment < handle
         target_position % position of the target
         timestep % timestep value
         captured_evaders % boolean array containing capture status of evaders
-        pursuer
-        evaders
-        capture_tolerance
+        pursuer % pursuer object
+        evaders % evader object array
+        capture_tolerance % tolerance for point capture
+        alpha % speed ratio array
     end
     methods
 
@@ -22,6 +23,10 @@ classdef Environment < handle
             env.captured_evaders = boolean(zeros(1,env.evader_numbers));
             env.evaders = Evader.empty(env.evader_numbers,0);
             env.capture_tolerance = 0.05;
+            env.alpha = zeros(1,n);
+            for i=1:n
+                env.alpha(i)=env.evader_speeds(i)/env.pursuer_speed;
+            end
 
             % Initialize pursuer and evader object instances 
             if ~isempty(pursuer_position)
@@ -79,7 +84,7 @@ classdef Environment < handle
             barriers = zeros(length(evaders),1);
             % disp(length(evaders))
             for i=1:length(evaders)
-                barriers(i) = norm(env.target_position - evaders(i).position) - norm(env.target_position - env.pursuer.position);
+                barriers(i) = norm(env.target_position - evaders(i).position)^2 - env.alpha(i)^2*norm(env.target_position - env.pursuer.position)^2;
             end
             barrier_value = min(barriers);
         end
@@ -128,7 +133,7 @@ classdef Environment < handle
             for i=1:env.evader_numbers
                 win = env.check_initialization(env.evaders(i),false);
                 % win = true;
-                evader_velocities(:,i) = env.evaders(i).heading_velocity(env.pursuer.position, env.target_position,win);
+                evader_velocities(:,i) = env.evaders(i).heading_velocity(env.pursuer.position, env.target_position,win,env.alpha(i));
             end
         end
 
