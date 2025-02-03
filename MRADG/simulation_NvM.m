@@ -126,18 +126,18 @@ M=3;
 %     1.1422];
 
 % Example 3
-% xp=[-6.7681   -2.9472    0.0104;
-%    -3.3293   -3.9641   -3.3286;
-%    -4.7636  -13.3481   -0.6086];
-% xe=[4.9231   -7.9093    4.4252;
-%    -8.0710    2.7309   -5.9061;
-%    -6.7315  -10.6454  -12.4869];
-% vp=[1.7089;
-%     2.2261;
-%     2.2829];
-% ve=[1.6938;
-%     1.0098;
-%     1.8432];
+xp=[-6.7681   -2.9472    0.0104;
+   -3.3293   -3.9641   -3.3286;
+   -4.7636  -13.3481   -0.6086];
+xe=[4.9231   -7.9093    4.4252;
+   -8.0710    2.7309   -5.9061;
+   -6.7315  -10.6454  -12.4869];
+vp=[1.7089;
+    2.2261;
+    2.2829];
+ve=[1.6938;
+    1.0098;
+    1.8432];
 
 % Examples for evader winning play in evader winning region
 
@@ -156,18 +156,18 @@ M=3;
 %     1.8034];
 
 % Example 2
-xp=[0.3823,-7.0642,1.1703;
-    0.1015,-7.4521,-10.6796;
-    0.8081,3.9861,-8.4487];
-xe=[-1.5747,-6.2271,1.6700;
-    0.3771,-11.6549,2.2396;
-    4.7974,-4.7115,2.6856];
-vp=[2.0880;
-    1.6548;
-    1.6999];
-ve=[1.4070;
-    1.7487;
-    1.8256];
+% xp=[0.3823,-7.0642,1.1703;
+%     0.1015,-7.4521,-10.6796;
+%     0.8081,3.9861,-8.4487];
+% xe=[-1.5747,-6.2271,1.6700;
+%     0.3771,-11.6549,2.2396;
+%     4.7974,-4.7115,2.6856];
+% vp=[2.0880;
+%     1.6548;
+%     1.6999];
+% ve=[1.4070;
+%     1.7487;
+%     1.8256];
 
 % Computing static information for assignment
 
@@ -223,7 +223,7 @@ a
 
 x=opt_assgn(a,M,N,"primal")
 
-% This was done to ensure that agents in the lower numbner team are
+% This was done to ensure that agents in the lower number team are
 % assigned some agent of the opposite team. But it is not necessary, as if
 % some agent is not assigned then even if it were assigned contribution
 % would be zero else the solution is not optimal. So nonassignment means
